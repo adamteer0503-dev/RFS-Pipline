@@ -1,12 +1,11 @@
 import { LogIn, Zap } from 'lucide-react';
-import { GOOGLE_CLIENT_ID } from '../../constants';
 
 interface Props {
   onSignIn: () => void;
 }
 
 export function GoogleSignIn({ onSignIn }: Props) {
-  const hasCreds = !!GOOGLE_CLIENT_ID;
+  const hasCreds = true;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 px-4">

@@ -25,9 +25,8 @@ export const STATUS_COLORS: Record<string, string> = {
   Closed:   'bg-red-100 text-red-700 ring-red-200',
 };
 
-// Fallback Google Client ID — override via .env
-export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? '';
+export const GOOGLE_CLIENT_ID = '513681181002-r7vhj4ubir9b6gt9k5sheoruqkgaf32t.apps.googleusercontent.com';
 
-export const EXECUTIVE_EMAIL = import.meta.env.VITE_EXECUTIVE_EMAIL ?? '';
+export const EXECUTIVE_EMAIL = 'adamteer0503@gmail.com';
 
 export const MASTER_TAB = '__master__';
