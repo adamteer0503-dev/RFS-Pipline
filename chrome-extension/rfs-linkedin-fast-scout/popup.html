@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>RFS LinkedIn Fast-Scout</title>
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-mark">RFS</span>
+        <div class="logo-text">
+          <span class="title">Fast-Scout &amp; Runner Invite</span>
+          <span class="subtitle">Run For Startups · LinkedIn Toolkit</span>
+        </div>
+      </div>
+      <span id="statusDot" class="status-dot" title="Draft auto-saved"></span>
+    </header>
+
+    <main class="app-body">
+      <section class="field-group">
+        <div class="field">
+          <label for="candidateName">Candidate Name &amp; Role</label>
+          <input id="candidateName" type="text" placeholder="e.g. Priya Shah, Co-founder &amp; CEO" />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="startupStage">Startup Stage</label>
+            <select id="startupStage">
+              <option value="Ideation">Ideation</option>
+              <option value="MVP">MVP</option>
+              <option value="Seed">Seed</option>
+              <option value="Round A">Round A</option>
+              <option value="VC Investor">VC Investor</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="runningPace">Estimated Running Pace</label>
+            <select id="runningPace">
+              <option value="5:00 min/km">5:00 min/km</option>
+              <option value="5:30 min/km">5:30 min/km</option>
+              <option value="6:00 min/km">6:00 min/km</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="actions">
+        <button id="generateInvite" class="btn btn-primary">
+          <span class="btn-icon">🏃</span> Generate RFS Invite
+        </button>
+        <button id="generateIcebreaker" class="btn btn-secondary">
+          <span class="btn-icon">💬</span> Generate Running Icebreaker
+        </button>
+      </section>
+
+      <section class="output-section">
+        <div class="output-header">
+          <label for="output">Generated Message</label>
+          <button id="copyBtn" class="btn btn-copy">Copy to Clipboard</button>
+        </div>
+        <textarea id="output" rows="10" placeholder="Your generated invite or icebreaker will appear here..."></textarea>
+        <span id="copyStatus" class="copy-status"></span>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <button id="clearDraft" class="link-btn">Clear draft</button>
+      <span class="footer-note">Draft saved locally on this device</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
