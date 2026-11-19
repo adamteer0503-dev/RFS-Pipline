@@ -1,0 +1,1371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoasTee · Plant your drink</title>
+<meta name="description" content="CoasTee is the outdoor coaster with fold-out golf-tee legs. Press it into grass or sand and your drink stays upright. Design yours with your own photo or logo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F2230; --ink-2:#3C5260; --muted:#6B7F8B;
+  --paper:#FBF8F3; --card:#FFFFFF; --line:#E6E0D6;
+  --navy:#0E2B3D; --blue:#1F8FD1; --sky:#E4F3FB;
+  --sun:#FF7A1A; --sun-2:#E8650A; --grass:#3E8E47; --sand:#F4EADB;
+  --radius:18px; --shadow:0 10px 30px rgba(15,34,48,.08), 0 2px 6px rgba(15,34,48,.06);
+  --display:"Bricolage Grotesque", system-ui, sans-serif;
+  --body:Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,canvas{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;letter-spacing:-.02em}
+h2{font-size:clamp(2rem,4.2vw,3.2rem);font-weight:800}
+h3{font-size:1.2rem;font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:96px 0}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.lead{font-size:1.15rem;color:var(--ink-2);max-width:620px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:14px 24px;font:600 1rem var(--body);cursor:pointer;text-decoration:none;transition:transform .15s, background .15s, box-shadow .15s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-sun{background:var(--sun);color:#fff;box-shadow:0 6px 18px rgba(255,122,26,.35)}
+.btn-sun:hover{background:var(--sun-2)}
+.btn-ink{background:var(--navy);color:#fff}
+.btn-ink:hover{background:#163d55}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn-ghost:hover{background:rgba(15,34,48,.05)}
+.btn-sm{padding:10px 16px;font-size:.9rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);font-size:.82rem;font-weight:600;color:var(--ink-2)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(251,248,243,.86);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav.scrolled{border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-mark{width:30px;height:30px}
+.logo b{color:var(--sun)}
+.nav-links{display:flex;gap:28px;font-weight:500;font-size:.95rem}
+.nav-links a{text-decoration:none;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{display:flex;gap:10px}
+
+/* hero */
+.hero{padding:48px 0 72px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(3rem,7.4vw,6rem);font-weight:800;letter-spacing:-.045em;line-height:.92}
+.hero h1 em{font-style:normal;color:var(--sun)}
+.hero .lead{margin:24px 0 32px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.hero-visual{position:relative;border-radius:28px;overflow:hidden;box-shadow:0 30px 60px rgba(15,34,48,.18);aspect-ratio:3/2;background:#cfe0c8}
+.hero-visual canvas{position:absolute;inset:0;width:100%;height:100%;transition:opacity .9s ease}
+.hero-tag{position:absolute;left:16px;bottom:16px;background:rgba(255,255,255,.92);border-radius:14px;padding:10px 14px;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.hero-tag .dot{width:8px;height:8px;border-radius:50%;background:var(--grass);box-shadow:0 0 0 4px rgba(62,142,71,.2)}
+.hero-note{margin-top:14px;font-size:.9rem;color:var(--muted)}
+.hero-note a{color:var(--ink);font-weight:600}
+
+/* problem */
+.problem{background:var(--navy);color:#fff;padding:72px 0}
+.problem .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:36px}
+.problem h2{color:#fff;max-width:760px}
+.problem .x{font-family:var(--display);font-size:1.4rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.problem .x span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);font-size:1rem}
+.problem p{color:#B8CBD6}
+.problem .answer{margin-top:44px;padding-top:28px;border-top:1px solid rgba(255,255,255,.14);font-family:var(--display);font-size:clamp(1.4rem,2.6vw,2rem);font-weight:700}
+.problem .answer b{color:var(--sun)}
+
+/* how */
+.how .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
+.step{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 20px 26px;position:relative}
+.step canvas{width:100%;aspect-ratio:4/3;border-radius:12px;background:linear-gradient(#F1F6F9,#E2ECF1)}
+.step .n{position:absolute;top:30px;left:30px;width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-family:var(--display)}
+.step h3{margin:18px 0 6px}
+.step p{color:var(--ink-2);font-size:.95rem}
+.real{display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:24px;margin-top:24px;align-items:stretch}
+.real figure{margin:0;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow);background:#ddd}
+.real figure img{width:100%;height:100%;object-fit:cover;aspect-ratio:1}
+.real figcaption{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.92);border-radius:10px;padding:6px 10px;font-size:.8rem;font-weight:600}
+.real .facts{background:var(--sand);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.fact{display:flex;gap:14px;align-items:flex-start}
+.fact i{flex:none;width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center;font-style:normal;font-size:1.1rem}
+.fact b{display:block;font-family:var(--display);font-size:1.08rem}
+.fact span{color:var(--ink-2);font-size:.92rem}
+
+/* studio */
+.studio{background:linear-gradient(180deg,var(--sky),var(--paper))}
+.studio-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+.studio-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:24px;margin-top:36px;align-items:start}
+.stage{scroll-margin-top:80px;background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:14px}
+.stage-main{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:3/2;background:#e9eef1}
+.stage-main canvas{width:100%;height:100%}
+.stage-actions{position:absolute;right:12px;top:12px;display:flex;gap:8px}
+.icon-btn{border:0;background:rgba(255,255,255,.94);border-radius:999px;padding:9px 14px;font:600 .85rem var(--body);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);display:flex;align-items:center;gap:6px;color:var(--ink)}
+.icon-btn:hover{background:#fff}
+.scenes{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:12px}
+.scene-btn{border:0;padding:0;background:none;cursor:pointer;text-align:left;font:600 .78rem var(--body);color:var(--ink-2)}
+.scene-btn canvas{width:100%;aspect-ratio:3/2;border-radius:10px;box-shadow:0 0 0 2px transparent;transition:box-shadow .15s, transform .15s}
+.scene-btn span{display:block;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scene-btn:hover canvas{transform:translateY(-2px)}
+.scene-btn[aria-pressed="true"] canvas{box-shadow:0 0 0 3px var(--sun)}
+.scene-btn[aria-pressed="true"]{color:var(--ink)}
+.panel{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:22px}
+.panel h3{font-size:1.05rem;margin-bottom:12px}
+.drop{position:relative;border:2px dashed #C9D6DE;border-radius:16px;padding:14px;display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:center;transition:border-color .15s, background .15s}
+.drop.over{border-color:var(--sun);background:#FFF4EC}
+#editor{width:140px;height:140px;border-radius:50%;cursor:grab;touch-action:none;background:#f3f3f3}
+#editor:active{cursor:grabbing}
+.drop p{font-size:.88rem;color:var(--ink-2)}
+.drop .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.kbd{display:inline-block;padding:1px 6px;border-radius:6px;background:#EEF2F4;font:600 .78rem var(--body);color:var(--ink)}
+.samples{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.samples small{color:var(--muted);font-weight:600;font-size:.78rem;margin-right:2px}
+.sample{width:44px;height:44px;border-radius:50%;border:0;padding:0;cursor:pointer;overflow:hidden;box-shadow:0 0 0 2px #fff,0 0 0 3.5px transparent;transition:box-shadow .15s}
+.sample[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--sun)}
+.sample canvas{width:100%;height:100%}
+.row{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;margin-top:16px;font-size:.88rem;font-weight:600;color:var(--ink-2)}
+.seg{display:inline-flex;flex-wrap:wrap;background:#EEF2F4;border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:7px 14px;font:600 .85rem var(--body);cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+input[type=range]{width:100%;accent-color:var(--sun)}
+.swatches{display:flex;gap:8px}
+.swatch{width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15),0 0 0 2px #fff,0 0 0 3px transparent}
+.swatch[aria-pressed="true"]{box-shadow:inset 0 0 0 1px rgba(0,0,0,.15),0 0 0 2px #fff,0 0 0 4px var(--sun)}
+.field{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;font:500 .95rem var(--body);color:var(--ink);background:#fff;transition:border-color .15s}
+.field:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,143,209,.15)}
+.toggle{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;color:var(--ink-2);font-size:.88rem}
+.toggle input{width:18px;height:18px;accent-color:var(--sun)}
+.panel-ctas{display:grid;gap:10px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.panel-ctas .btn{width:100%}
+.hint{font-size:.8rem;color:var(--muted);margin-top:8px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:100;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* uses */
+.uses{padding:72px 0}
+.use-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px}
+.use{background:var(--card);border-radius:16px;padding:18px;box-shadow:inset 0 0 0 1px var(--line);display:flex;align-items:center;gap:12px;font-weight:600}
+.use i{font-style:normal;font-size:1.5rem}
+
+/* preorder */
+.preorder{background:var(--sand)}
+.po-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;margin-top:40px;align-items:start}
+.packs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pack{position:relative;border:0;background:#fff;border-radius:18px;padding:18px 16px;text-align:left;cursor:pointer;box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow .15s, transform .15s;font-family:var(--body);color:var(--ink)}
+.pack:hover{transform:translateY(-2px)}
+.pack[aria-pressed="true"]{box-shadow:inset 0 0 0 2.5px var(--sun)}
+.pack .q{font-family:var(--display);font-weight:800;font-size:1.5rem}
+.pack .p{font-weight:700;font-size:1.1rem;margin-top:8px}
+.pack .e{font-size:.8rem;color:var(--muted)}
+.pack .tag{position:absolute;top:-10px;right:12px;background:var(--sun);color:#fff;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.04em}
+.po-design{display:flex;gap:16px;align-items:center;background:#fff;border-radius:18px;padding:14px;margin-top:16px}
+.po-design canvas{width:120px;height:80px;border-radius:10px;flex:none}
+.po-design p{font-size:.9rem;color:var(--ink-2)}
+.po-design a{font-weight:600}
+.perks{margin-top:22px;display:grid;gap:10px}
+.perks div{display:flex;gap:10px;align-items:center;font-weight:500}
+.perks div::before{content:"✓";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--grass);color:#fff;font-size:.75rem;font-weight:800;flex:none}
+form.card{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:26px;display:grid;gap:14px}
+form.card .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label.lbl{display:grid;gap:6px;font-size:.84rem;font-weight:600;color:var(--ink-2)}
+.summary{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--paper);border-radius:12px;font-weight:600}
+.summary b{font-family:var(--display);font-size:1.3rem}
+.fine{font-size:.8rem;color:var(--muted)}
+.done{display:none;text-align:center;padding:20px 6px}
+.done .big{font-size:2.6rem}
+.done h3{font-size:1.5rem;margin:6px 0 8px}
+.done p{color:var(--ink-2)}
+form.sent > :not(.done){display:none}
+form.sent .done{display:block}
+
+/* business */
+.biz{background:var(--navy);color:#fff}
+.biz .lead{color:#B8CBD6}
+.biz h2{color:#fff;max-width:820px}
+.biz .eyebrow{color:#7CC6F0}
+.why{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.why div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px}
+.why b{display:block;font-family:var(--display);font-size:1.12rem;margin:10px 0 6px}
+.why span{color:#B8CBD6;font-size:.92rem}
+.why i{font-style:normal;font-size:1.4rem}
+.segs{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.segs span{padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);font-weight:600;font-size:.88rem}
+.biz-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;margin-top:48px;align-items:start}
+.estimator{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:26px}
+.estimator h3{margin-bottom:6px}
+.est-q{font-family:var(--display);font-size:3rem;font-weight:800;line-height:1;margin:18px 0 4px}
+.est-q small{font-size:1rem;color:#B8CBD6;font-family:var(--body);font-weight:500}
+.est-out{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.est-out div{background:rgba(255,255,255,.07);border-radius:14px;padding:14px}
+.est-out span{display:block;font-size:.8rem;color:#B8CBD6}
+.est-out b{font-family:var(--display);font-size:1.6rem}
+.tiers{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.tiers span{font-size:.75rem;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.07);color:#B8CBD6}
+.tiers span.on{background:var(--sun);color:#fff}
+.biz form.card{color:var(--ink)}
+.biz-design{display:flex;gap:12px;align-items:center;background:var(--paper);border-radius:14px;padding:10px}
+.biz-design canvas{width:84px;height:56px;border-radius:8px;flex:none}
+
+/* faq */
+.faq-list{margin-top:32px;display:grid;gap:10px;max-width:860px}
+details{background:#fff;border-radius:16px;box-shadow:inset 0 0 0 1px var(--line);padding:0 20px}
+summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:600;font-size:1.02rem;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--muted);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 18px;color:var(--ink-2)}
+
+/* footer */
+footer{background:#0A1F2C;color:#B8CBD6;padding:56px 0 110px}
+footer .wrap{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap}
+footer .logo{color:#fff}
+footer a{color:#fff;text-decoration:none}
+footer .cols{display:flex;gap:48px;flex-wrap:wrap;font-size:.92rem}
+footer .cols div{display:grid;gap:6px;align-content:start}
+footer .cols b{color:#fff;margin-bottom:4px}
+
+/* mobile bar */
+.mbar{display:none}
+
+@media (max-width:1020px){
+  .hero .wrap,.studio-grid,.po-grid,.biz-grid{grid-template-columns:minmax(0,1fr)}
+  .why{grid-template-columns:1fr 1fr}
+  .use-grid{grid-template-columns:repeat(2,1fr)}
+  .real{grid-template-columns:1fr 1fr}
+  .real .facts{grid-column:1/-1}
+  .nav-links{display:none}
+}
+@media (max-width:680px){
+  .wrap{padding:0 16px}
+  section{padding:64px 0}
+  .hero{padding:20px 0 48px}
+  .hero .wrap{gap:28px}
+  .nav-cta .btn-ghost{display:none}
+  .problem .grid,.how .steps{grid-template-columns:1fr}
+  .scenes{grid-template-columns:repeat(3,1fr)}
+  .why{grid-template-columns:1fr}
+  .packs{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .pack{padding:14px 10px}
+  .pack .q{font-size:1.15rem}
+  .pack .p{font-size:.95rem}
+  form.card .two{grid-template-columns:1fr}
+  .drop{grid-template-columns:96px 1fr;gap:12px}
+  #editor{width:96px;height:96px}
+  .row{grid-template-columns:78px 1fr}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(251,248,243,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  .mbar .btn{flex:1;padding:12px 10px;font-size:.92rem}
+  .toast{bottom:100px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="CoasTee home">
+      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="11" rx="13" ry="5" fill="#FF7A1A"/><path d="M3 11v3c0 2.8 5.8 5 13 5s13-2.2 13-5v-3c0 2.8-5.8 5-13 5S3 13.8 3 11z" fill="#0E2B3D"/><path d="M8 18l1.6 10L11 18zM15 19.5l1 10 1-10zM21 18l1.4 10L24 18z" fill="#0E2B3D"/></svg>
+      <span>Coas<b>Tee</b></span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#studio">Design yours</a>
+      <a href="#business">For business</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#business" class="btn btn-ghost btn-sm" data-track="nav_business">For business</a>
+      <a href="#preorder" class="btn btn-sun btn-sm" data-track="nav_preorder">Pre-order</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="badges">
+        <span class="chip">🏷️ Patent pending</span>
+        <span class="chip">🇺🇸 Made in the USA</span>
+        <span class="chip">💛 Woman-owned</span>
+      </div>
+      <h1>Plant your drink.<br><em>Anywhere.</em></h1>
+      <p class="lead">CoasTee is the outdoor coaster with fold-out golf-tee legs. Press it into grass or sand and your drink stays upright, steady and sand-free. Fold the legs, and it's a coaster for any table.</p>
+      <div class="hero-ctas">
+        <a href="#studio" class="btn btn-sun" data-track="hero_design">Design yours &amp; pre-order →</a>
+        <a href="#business" class="btn btn-ghost" data-track="hero_business">Branded for your business</a>
+      </div>
+      <p class="hero-note">Your photo. Your logo. Your wedding monogram. <a href="#studio">See it on a CoasTee in 10 seconds</a>.</p>
+    </div>
+    <div class="hero-visual" aria-label="CoasTee coasters planted in the lawn at an outdoor event, showing different custom designs">
+      <canvas id="heroA" width="1200" height="800"></canvas>
+      <canvas id="heroB" width="1200" height="800" style="opacity:0"></canvas>
+      <div class="hero-tag"><span class="dot"></span><span id="heroLabel">Garden party · custom design</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="problem">
+  <div class="wrap">
+    <p class="eyebrow" style="color:#7CC6F0">The outdoor drink problem</p>
+    <h2 style="margin-top:12px">Grass is uneven. Sand gets everywhere. And there's never a table when you need one.</h2>
+    <div class="grid">
+      <div><p class="x"><span>✕</span>Tipped over</p><p>One bump on the lawn and your drink is gone. Picnic blankets and sloped hills don't help.</p></div>
+      <div><p class="x"><span>✕</span>Sand in every sip</p><p>Set a cup down at the beach and it comes back up with a gritty rim.</p></div>
+      <div><p class="x"><span>✕</span>Nowhere to put it</p><p>At weddings, festivals and on the course, you end up holding your drink all day.</p></div>
+    </div>
+    <p class="answer">CoasTee's legs <b>lock into the ground</b>, so your drink stays up wherever you sit down.</p>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2 style="margin-top:12px">Three seconds. No tools.</h2>
+    <div class="steps">
+      <div class="step"><canvas id="step1" width="600" height="450"></canvas><span class="n">1</span><h3>Unfold the legs</h3><p>Three built-in golf-tee legs swing out from underneath.</p></div>
+      <div class="step"><canvas id="step2" width="600" height="450"></canvas><span class="n">2</span><h3>Press into grass or sand</h3><p>The tees grip uneven ground so the surface stays level.</p></div>
+      <div class="step"><canvas id="step3" width="600" height="450"></canvas><span class="n">3</span><h3>Fold flat, take it anywhere</h3><p>Legs fold away. It slips into a bag or pocket and works as a regular coaster on any table.</p></div>
+    </div>
+    <div class="real">
+      <figure><img src="assets/product-legs.jpg" alt="White CoasTee with its three golf-tee legs extended" loading="lazy"><figcaption>The real thing, legs out</figcaption></figure>
+      <figure><img src="assets/grass-coffee.jpg" alt="Iced coffee standing on a black CoasTee planted in the grass" loading="lazy"><figcaption>Iced coffee, planted in the park</figcaption></figure>
+      <div class="facts">
+        <div class="fact"><i>⛳</i><div><b>Integrated golf-tee legs</b><span>A firm grip on uneven ground, from dunes to hillsides.</span></div></div>
+        <div class="fact"><i>🎒</i><div><b>Compact storage</b><span>Legs fold neatly for bags and pockets.</span></div></div>
+        <div class="fact"><i>🎨</i><div><b>Fully customizable</b><span>Print on the top face, add text around the rim.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="studio" id="studio">
+  <div class="wrap">
+    <div class="studio-head">
+      <div>
+        <p class="eyebrow">Design studio</p>
+        <h2 style="margin-top:12px">Make it yours.<br>See it in the wild.</h2>
+      </div>
+      <p class="lead" style="max-width:440px">Drop in any photo or logo and see your CoasTee on the lawn, at the beach, on the course and on the table, before you order.</p>
+    </div>
+
+    <div class="studio-grid">
+      <div class="stage">
+        <div class="stage-main">
+          <canvas id="main" width="1200" height="800" aria-label="Mockup of your custom CoasTee in the selected scene"></canvas>
+          <div class="stage-actions">
+            <button class="icon-btn" id="shareBtn" type="button" hidden>↗ Share</button>
+            <button class="icon-btn" id="dlBtn" type="button">↓ Save image</button>
+          </div>
+        </div>
+        <div class="scenes" id="scenes" role="group" aria-label="Choose a scene"></div>
+      </div>
+
+      <div class="panel">
+        <h3>1 · Your design</h3>
+        <div class="drop" id="drop">
+          <canvas id="editor" width="320" height="320" aria-label="Drag to position your image"></canvas>
+          <div>
+            <p><b>Drop, upload, or paste</b> an image (<span class="kbd">Ctrl</span>/<span class="kbd">⌘</span>+<span class="kbd">V</span>). Drag the circle to position it.</p>
+            <div class="btns">
+              <label class="btn btn-ink btn-sm" for="file">Upload image</label>
+              <button class="btn btn-ghost btn-sm" type="button" id="pasteBtn">Paste</button>
+            </div>
+            <input type="file" id="file" accept="image/*" hidden>
+          </div>
+        </div>
+        <div class="samples" id="samples"><small>Or try:</small></div>
+
+        <div class="row">Layout
+          <div class="seg" id="fitSeg"><button type="button" data-v="cover" aria-pressed="true">Fill (photo)</button><button type="button" data-v="contain" aria-pressed="false">Fit (logo)</button></div>
+        </div>
+        <div class="row">Zoom <input type="range" id="zoom" min="0.5" max="3" step="0.01" value="1" aria-label="Zoom"></div>
+        <div class="row">Rotate <input type="range" id="rot" min="-180" max="180" step="1" value="0" aria-label="Rotate"></div>
+
+        <h3 style="margin-top:24px">2 · Finish</h3>
+        <div class="row">Color <div class="swatches" id="swatches"></div></div>
+        <div class="row">Rim text <input class="field" id="rim" maxlength="32" placeholder="e.g. Sarah &amp; Dan · 06.20.27"></div>
+        <div class="row" style="margin-top:14px"><span></span><label class="toggle"><input type="checkbox" id="drinks" checked> Show with drinks</label></div>
+        <p class="hint">Rim text stays visible even when a drink covers the top. Great for names, dates and URLs.</p>
+
+        <div class="panel-ctas">
+          <a href="#preorder" class="btn btn-sun" data-track="studio_preorder">Pre-order with this design →</a>
+          <a href="#business" class="btn btn-ghost" data-track="studio_quote" id="quoteThis">Get a business quote for this design</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="uses">
+  <div class="wrap">
+    <p class="eyebrow">Made for the places tables aren't</p>
+    <div class="use-grid">
+      <div class="use"><i>🏖️</i>Beach days</div>
+      <div class="use"><i>🧺</i>Picnics &amp; parks</div>
+      <div class="use"><i>⛳</i>Golf &amp; tournaments</div>
+      <div class="use"><i>💍</i>Outdoor weddings</div>
+      <div class="use"><i>🎶</i>Festivals &amp; concerts</div>
+      <div class="use"><i>🏕️</i>Camping</div>
+      <div class="use"><i>🏈</i>Tailgates</div>
+      <div class="use"><i>🌿</i>Backyard &amp; patio</div>
+    </div>
+  </div>
+</section>
+
+<section class="preorder" id="preorder">
+  <div class="wrap">
+    <p class="eyebrow">Pre-order · first production run</p>
+    <h2 style="margin-top:12px">Reserve yours from the first batch.</h2>
+    <p class="lead" style="margin-top:14px">Founding customers get first-run pricing and ship first.</p>
+    <div class="po-grid">
+      <div>
+        <div class="packs" id="packs" role="group" aria-label="Choose a pack"></div>
+        <div class="po-design">
+          <canvas id="poThumb" width="600" height="400"></canvas>
+          <div>
+            <p><b>Your design:</b> <span id="poDesignLabel">Sunset</span></p>
+            <p><a href="#studio">Change design</a> · <label class="toggle" style="display:inline-flex;font-size:.85rem"><input type="checkbox" id="poCustom" checked> Print my design</label></p>
+          </div>
+        </div>
+        <div class="perks">
+          <div>Founding-customer pricing, locked in</div>
+          <div>Ships first from the initial run</div>
+          <div>Custom print on the top face + rim text</div>
+          <div id="perkPay">No charge today. We'll email you before anything ships.</div>
+        </div>
+      </div>
+      <form class="card" id="poForm" novalidate>
+        <h3 style="font-size:1.3rem">Your reservation</h3>
+        <div class="two">
+          <label class="lbl">Full name<input class="field" name="name" required autocomplete="name"></label>
+          <label class="lbl">Email<input class="field" name="email" type="email" required autocomplete="email"></label>
+        </div>
+        <div class="two">
+          <label class="lbl">ZIP / Postal code<input class="field" name="zip" autocomplete="postal-code"></label>
+          <label class="lbl">Where will you use it?
+            <select class="field" name="use"><option>Beach</option><option>Park &amp; picnics</option><option>Golf</option><option>Wedding / event</option><option>Camping</option><option>A gift</option><option>Other</option></select>
+          </label>
+        </div>
+        <label class="lbl">Anything else? (optional)<textarea class="field" name="note" rows="2" placeholder="e.g. a gift for my golf group"></textarea></label>
+        <div class="summary"><span id="poSumLabel">4-pack</span><b id="poSumPrice">$44</b></div>
+        <button class="btn btn-sun" type="submit" data-track="preorder_submit">Reserve my CoasTee</button>
+        <p class="fine">Founding prices shown are for the first production run. You'll get a confirmation email.</p>
+        <div class="done">
+          <div class="big">🎉</div>
+          <h3>You're on the first-run list.</h3>
+          <p>We've saved your reservation and design. Watch your inbox for next steps.</p>
+          <p style="margin-top:16px" id="poPayWrap" hidden><a class="btn btn-sun" id="poPay" href="#" target="_blank" rel="noopener">Secure my spot now →</a></p>
+          <p style="margin-top:16px"><button type="button" class="btn btn-ghost btn-sm" id="poShare">Share my design with friends</button></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="biz" id="business">
+  <div class="wrap">
+    <p class="eyebrow">For business &amp; events</p>
+    <h2 style="margin-top:12px">Your logo in every guest's hand, all event long.</h2>
+    <p class="lead" style="margin-top:16px">Napkins get tossed and koozies get forgotten. A CoasTee is used all afternoon and goes home in a pocket.</p>
+    <div class="why">
+      <div><i>👀</i><b>Seen all day</b><span>Logo on top, message around the rim. Still visible with a drink on it.</span></div>
+      <div><i>🎒</i><b>Kept, not tossed</b><span>Reusable and pocket-sized. Guests take it home and keep using it.</span></div>
+      <div><i>🌤️</i><b>Built for outdoors</b><span>Made for the lawns, beaches and fairways where your events happen.</span></div>
+      <div><i>🇺🇸</i><b>Made in the USA</b><span>Patent-pending design from a woman-owned business.</span></div>
+    </div>
+    <div class="segs">
+      <span>Corporate swag &amp; conferences</span><span>Weddings &amp; planners</span><span>Golf clubs &amp; tournaments</span><span>Breweries, wineries &amp; venues</span><span>Festivals &amp; activations</span><span>Retail &amp; wholesale</span>
+    </div>
+
+    <div class="biz-grid">
+      <div class="estimator">
+        <h3>Quick estimate</h3>
+        <p style="color:#B8CBD6;font-size:.92rem">Drag to your quantity.</p>
+        <div class="est-q"><span id="estQ">250</span> <small>units</small></div>
+        <input type="range" id="estRange" min="0" max="100" step="1" value="40" aria-label="Quantity">
+        <div class="tiers" id="tiers"></div>
+        <div class="est-out">
+          <div><span>From / unit</span><b id="estUnit">$0</b></div>
+          <div><span>Estimated total</span><b id="estTotal">$0</b></div>
+        </div>
+        <p class="fine" style="color:#8FA6B3;margin-top:12px">Indicative only, including one-color or full-color print on the top face. Final quote depends on artwork, colors and timeline.</p>
+      </div>
+
+      <form class="card" id="bizForm" novalidate>
+        <h3 style="font-size:1.3rem">Get a quote within 1 business day</h3>
+        <div class="two">
+          <label class="lbl">Company / Organization<input class="field" name="company" required autocomplete="organization"></label>
+          <label class="lbl">Your name<input class="field" name="name" required autocomplete="name"></label>
+        </div>
+        <div class="two">
+          <label class="lbl">Work email<input class="field" name="email" type="email" required autocomplete="email"></label>
+          <label class="lbl">Phone (optional)<input class="field" name="phone" type="tel" autocomplete="tel"></label>
+        </div>
+        <div class="two">
+          <label class="lbl">What's it for?
+            <select class="field" name="useCase"><option>Corporate swag / conference</option><option>Wedding / private event</option><option>Golf club / tournament</option><option>Brewery / winery / venue</option><option>Festival / brand activation</option><option>Retail / wholesale</option><option>Other</option></select>
+          </label>
+          <label class="lbl">Quantity
+            <select class="field" name="qty" id="bizQty"><option>50–249</option><option selected>250–499</option><option>500–999</option><option>1,000–2,499</option><option>2,500+</option></select>
+          </label>
+        </div>
+        <label class="lbl">Needed by (optional)<input class="field" name="date" type="date"></label>
+        <label class="lbl">Tell us about the event (optional)<textarea class="field" name="message" rows="3" placeholder="e.g. Annual golf tournament, 300 guests, logo + date on the rim"></textarea></label>
+        <div class="biz-design">
+          <canvas id="bizThumb" width="600" height="400"></canvas>
+          <label class="toggle"><input type="checkbox" id="bizAttach" name="attachDesign" checked> Attach the design from the studio</label>
+        </div>
+        <button class="btn btn-sun" type="submit" data-track="business_submit">Request my quote →</button>
+        <p class="fine">Prefer to talk? Email <a id="bizMail" href="#"></a> or call <a id="bizTel" href="#"></a>.</p>
+        <div class="done">
+          <div class="big">🤝</div>
+          <h3>Thanks, we're on it.</h3>
+          <p>You'll get a quote and a digital proof of your design within one business day.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <p class="eyebrow">FAQ</p>
+    <h2 style="margin-top:12px">Good questions.</h2>
+    <div class="faq-list">
+      <details><summary>Does it work on a normal table?</summary><p>Yes. Fold the legs underneath and CoasTee sits flat like a regular coaster on tables, decks and countertops.</p></details>
+      <details><summary>What ground does it work on?</summary><p>The golf-tee legs are designed for grass, sand, dirt and other soft, uneven ground: lawns, beaches, parks, fairways and campsites.</p></details>
+      <details><summary>Can I put my own photo or logo on it?</summary><p>Yes. Use the <a href="#studio">design studio</a> to upload a photo, logo or monogram, add text around the rim, and see it in real-life scenes before you order.</p></details>
+      <details><summary>When will pre-orders ship?</summary><p id="faqShip"></p></details>
+      <details><summary>What's the minimum for a branded order?</summary><p id="faqMoq"></p></details>
+      <details><summary>Can you match our brand colors?</summary><p>For business orders, yes. Tell us your colors in the quote form and we'll include options in your proof.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a href="#top" class="logo">Coas<b>Tee</b></a>
+      <p style="margin-top:10px;max-width:320px">Stability for your outdoors. Patent pending · Made in the USA · Woman-owned business.</p>
+      <p style="margin-top:18px;font-size:.82rem">© 2026 CoasTee. All rights reserved.</p>
+    </div>
+    <div class="cols">
+      <div><b>Shop</b><a href="#studio">Design yours</a><a href="#preorder">Pre-order</a><a href="#faq">FAQ</a></div>
+      <div><b>Business</b><a href="#business">Branded orders</a><a href="#business">Retail &amp; wholesale</a></div>
+      <div><b>Contact</b><a id="ftMail" href="#"></a><a id="ftTel" href="#"></a><a id="ftLi" href="#" target="_blank" rel="noopener">LinkedIn</a></div>
+    </div>
+  </div>
+</footer>
+
+<div class="mbar">
+  <a href="#preorder" class="btn btn-sun" data-track="mbar_preorder">Pre-order</a>
+  <a href="#business" class="btn btn-ink" data-track="mbar_business">For business</a>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   CONFIG: edit these before going live
+   ========================================================= */
+const CONFIG = {
+  contactEmail: "shrebenach28@gmail.com",
+  contactPhone: "(518) 742-6313",
+  linkedin: "https://linkedin.com/in/shrebenach",
+  // POST endpoint that accepts JSON (Formspree, Make/Zapier webhook, Google Apps Script…).
+  // Leave empty to fall back to opening the visitor's email client.
+  formEndpoint: "",
+  // Optional Stripe Payment Link (or any checkout URL) shown after a pre-order is reserved.
+  checkoutUrl: "",
+  shipEstimate: "Pre-orders ship from the first production run. We'll email you a firm date before anything is charged or shipped.",
+  businessMOQ: 50,
+  // PLACEHOLDER PRICES, confirm before launch
+  packs: [
+    { id: "1", label: "Single", qty: 1, price: 14 },
+    { id: "4", label: "4-pack", qty: 4, price: 44, tag: "Most popular" },
+    { id: "8", label: "8-pack", qty: 8, price: 79, tag: "Party" },
+  ],
+  // PLACEHOLDER B2B unit prices by minimum quantity
+  tiers: [
+    { min: 50, unit: 7.5 }, { min: 250, unit: 6.0 }, { min: 500, unit: 5.25 },
+    { min: 1000, unit: 4.5 }, { min: 2500, unit: 3.9 },
+  ],
+  colors: [
+    { id: "white", name: "White", hex: "#F3F2EE" },
+    { id: "black", name: "Black", hex: "#232528" },
+  ],
+};
+
+/* analytics hook: works with GA4 (gtag) or Plausible if present */
+function track(name, props){ try{ if(window.gtag) gtag('event', name, props||{}); if(window.plausible) plausible(name, {props:props||{}}); }catch(e){} }
+
+/* =========================================================
+   Utilities
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const W = 1200, H = 800;
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hexRgb(h){ h = h.replace('#',''); return [0,2,4].map(i => parseInt(h.substr(i,2),16)); }
+function shade(hex, a){ const c = hexRgb(hex), t = a < 0 ? 0 : 255, p = Math.abs(a); return `rgb(${c.map(v => Math.round(v + (t - v) * p)).join(',')})`; }
+function lum(hex){ const [r,g,b] = hexRgb(hex); return (0.299*r + 0.587*g + 0.114*b) / 255; }
+function mk(w, h){ const c = document.createElement('canvas'); c.width = w; c.height = h || w; return c; }
+function money(n){ return '$' + (Math.round(n) === n ? n.toLocaleString('en-US') : n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})); }
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600); }
+
+/* =========================================================
+   State
+   ========================================================= */
+const state = {
+  design: { img: null, name: 'Sunset', custom: false, fit: 'cover', zoom: 1, ox: 0, oy: 0, rot: 0 },
+  color: CONFIG.colors[0].hex,
+  rim: '',
+  drinks: true,
+  scene: 'lawn',
+  pack: '4',
+};
+
+/* =========================================================
+   Coaster renderer
+   ========================================================= */
+function frustum(ctx, x, yb, rb, yt, rt, k){
+  ctx.beginPath();
+  ctx.moveTo(x - rt, yt);
+  ctx.lineTo(x - rb, yb);
+  ctx.ellipse(x, yb, rb, rb * k, 0, Math.PI, 0, true);
+  ctx.lineTo(x + rt, yt);
+  ctx.ellipse(x, yt, rt, rt * k, 0, 0, Math.PI, true);
+  ctx.closePath();
+}
+
+function legGeometry(o){
+  const by = o.y + o.T, w = o.r * 0.16;
+  return [-Math.PI/2, Math.PI/6, 5*Math.PI/6].map(a => {
+    const ax = o.x + o.r * 0.6 * Math.cos(a), ay = by + o.r * 0.6 * o.k * Math.sin(a) - o.T * 0.5;
+    return { a, ax, ay, w, tipY: ay + o.L + o.T * 0.5 };
+  }).sort((p, q) => Math.sin(p.a) - Math.sin(q.a));
+}
+
+function drawShadow(ctx, cx, cy, rx, ry, alpha){
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(1, ry / rx);
+  const g = ctx.createRadialGradient(0, 0, rx * 0.2, 0, 0, rx);
+  g.addColorStop(0, `rgba(0,0,0,${alpha})`); g.addColorStop(0.6, `rgba(0,0,0,${alpha * 0.45})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rx, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+}
+
+function drawDesign(ctx, cx, cy, rin, k, color, extraRot){
+  const d = state.design;
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(1, k);
+  ctx.beginPath(); ctx.arc(0, 0, rin, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = color; ctx.fillRect(-rin, -rin, rin * 2, rin * 2);
+  if (d.img){
+    const iw = d.img.width, ih = d.img.height;
+    const base = d.fit === 'cover' ? (2 * rin) / Math.min(iw, ih) : (2 * rin * 0.7) / Math.max(iw, ih);
+    const s = base * d.zoom;
+    ctx.rotate((extraRot || 0) * Math.PI / 180);
+    ctx.translate(d.ox * rin * 2, d.oy * rin * 2);
+    ctx.rotate(d.rot * Math.PI / 180);
+    ctx.drawImage(d.img, -iw * s / 2, -ih * s / 2, iw * s, ih * s);
+  }
+  ctx.restore();
+}
+
+function drawRimText(ctx, o, color){
+  const text = state.rim.trim(); if (!text || o.k >= 0.95) return;
+  let fs = o.T * 0.5;
+  ctx.save();
+  ctx.font = `700 ${fs}px Inter, sans-serif`;
+  let tw = ctx.measureText(text).width + text.length * fs * 0.06;
+  const maxArc = o.r * 2.3;
+  if (tw > maxArc){ fs *= maxArc / tw; ctx.font = `700 ${fs}px Inter, sans-serif`; tw = maxArc; }
+  ctx.fillStyle = lum(color) > 0.55 ? 'rgba(20,30,40,.82)' : 'rgba(255,255,255,.9)';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  let d = -tw / 2; const sp = fs * 0.06;
+  for (const ch of text){
+    const cw = ctx.measureText(ch).width; const mid = d + cw / 2; d += cw + sp;
+    const th = Math.PI / 2 - mid / o.r;
+    const px = o.x + o.r * Math.cos(th), py = o.y + o.T * 0.55 + o.r * o.k * Math.sin(th);
+    ctx.save(); ctx.translate(px, py); ctx.rotate(Math.atan2(-o.k * Math.cos(th), Math.sin(th))); ctx.scale(Math.max(0.05, Math.sin(th)), 1);
+    ctx.fillText(ch, 0, 0); ctx.restore();
+  }
+  ctx.restore();
+}
+
+const DRINKS = {
+  coffee:   { c: '#B98557', ice: true, straw: true, level: .8 },
+  rose:     { c: '#F4A4A0', ice: false, level: .62 },
+  beer:     { c: '#E5A030', foam: true, level: .78 },
+  lemonade: { c: '#F3DF6E', ice: true, straw: true, level: .8 },
+};
+function drawCup(ctx, x, y, r, k, kind){
+  const dr = DRINKS[kind];
+  const rb = r * 0.5, rt = r * 0.66, Hc = r * 1.55, yt = y - Hc;
+  drawShadow(ctx, x + rb * 0.12, y + 2, rb * 1.25, rb * k * 1.25, 0.32);
+  // back rim
+  ctx.save(); ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,.55)';
+  ctx.beginPath(); ctx.ellipse(x, yt, rt, rt * k, 0, Math.PI, 0); ctx.stroke(); ctx.restore();
+  // liquid
+  const lv = dr.level, yl = y - Hc * lv, rl = rb + (rt - rb) * lv;
+  const g = ctx.createLinearGradient(x - rt, 0, x + rt, 0);
+  g.addColorStop(0, shade(dr.c, -0.35)); g.addColorStop(0.3, dr.c); g.addColorStop(0.45, shade(dr.c, 0.2)); g.addColorStop(1, shade(dr.c, -0.4));
+  frustum(ctx, x, y - 3, rb * 0.96, yl, rl * 0.97, k); ctx.fillStyle = g; ctx.fill();
+  if (dr.foam){
+    const yf = yl - Hc * 0.09, rf = rb + (rt - rb) * (lv + 0.09);
+    frustum(ctx, x, yl, rl * 0.97, yf, rf * 0.97, k); ctx.fillStyle = '#F7EEDB'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x, yf, rf * 0.97, rf * 0.97 * k, 0, 0, Math.PI * 2); ctx.fillStyle = '#FFF8EA'; ctx.fill();
+  } else {
+    ctx.beginPath(); ctx.ellipse(x, yl, rl * 0.97, rl * 0.97 * k, 0, 0, Math.PI * 2); ctx.fillStyle = shade(dr.c, 0.18); ctx.fill();
+  }
+  if (dr.ice){
+    const R = rng(7);
+    for (let i = 0; i < 4; i++){
+      const ix = x + (R() - 0.5) * rl * 1.1, iy = yl + (R() - 0.3) * rl * k * 0.8, s = rl * (0.3 + R() * 0.12);
+      ctx.save(); ctx.translate(ix, iy); ctx.rotate((R() - 0.5) * 0.8);
+      ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-s/2, -s*0.35, s, s*0.7, s*0.15) : ctx.rect(-s/2, -s*0.35, s, s*0.7); ctx.fill(); ctx.stroke(); ctx.restore();
+    }
+  }
+  if (dr.straw){
+    ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = 'rgba(255,255,255,.95)'; ctx.lineWidth = r * 0.06;
+    ctx.beginPath(); ctx.moveTo(x + rl * 0.15, yl + 6); ctx.lineTo(x + rt * 0.35, yt - r * 0.55); ctx.stroke(); ctx.restore();
+  }
+  // glass body
+  frustum(ctx, x, y, rb, yt, rt, k);
+  const gg = ctx.createLinearGradient(x - rt, 0, x + rt, 0);
+  gg.addColorStop(0, 'rgba(255,255,255,.28)'); gg.addColorStop(0.18, 'rgba(255,255,255,.06)'); gg.addColorStop(0.8, 'rgba(255,255,255,.04)'); gg.addColorStop(1, 'rgba(255,255,255,.25)');
+  ctx.fillStyle = gg; ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1.5; ctx.stroke();
+  // highlight
+  ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.moveTo(x - rt * 0.62, yt + Hc * 0.08); ctx.lineTo(x - rt * 0.5, yt + Hc * 0.08); ctx.lineTo(x - rb * 0.55, y - Hc * 0.08); ctx.lineTo(x - rb * 0.67, y - Hc * 0.08); ctx.closePath(); ctx.fill(); ctx.restore();
+  // front rim
+  ctx.save(); ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(255,255,255,.85)';
+  ctx.beginPath(); ctx.ellipse(x, yt, rt, rt * k, 0, 0, Math.PI); ctx.stroke(); ctx.restore();
+}
+
+function drawCoaster(ctx, o){
+  const color = state.color, k = o.k;
+  const rin = o.r * 0.885;
+  if (k >= 0.95){ // top view
+    drawShadow(ctx, o.x + o.r * 0.06, o.y + o.r * 0.08, o.r * 1.1, o.r * 1.1, 0.3);
+    ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); ctx.fillStyle = shade(color, lum(color) > .5 ? -0.04 : 0.08); ctx.fill();
+    drawDesign(ctx, o.x, o.y, rin, 1, color, o.rot || 0);
+    ctx.save(); ctx.beginPath(); ctx.arc(o.x, o.y, rin, 0, Math.PI * 2);
+    const lg = ctx.createLinearGradient(o.x - o.r, o.y - o.r, o.x + o.r, o.y + o.r);
+    lg.addColorStop(0, 'rgba(0,0,0,.22)'); lg.addColorStop(0.5, 'rgba(0,0,0,0)'); lg.addColorStop(1, 'rgba(255,255,255,.35)');
+    ctx.strokeStyle = lg; ctx.lineWidth = 3; ctx.stroke();
+    const gl = ctx.createRadialGradient(o.x - o.r * .4, o.y - o.r * .45, 0, o.x - o.r * .4, o.y - o.r * .45, o.r * 1.4);
+    gl.addColorStop(0, 'rgba(255,255,255,.18)'); gl.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gl; ctx.fill(); ctx.restore();
+    return;
+  }
+  const legsOut = o.legs !== 'folded';
+  // shadow
+  if (legsOut){
+    const gy = o.y + o.T + o.L * (o.legs === 'stand' ? 1 : 0.92);
+    drawShadow(ctx, o.x + o.r * 0.18, gy, o.r * 1.15, o.r * k * 1.2, o.legs === 'stand' ? 0.22 : 0.3);
+  } else {
+    drawShadow(ctx, o.x + o.r * 0.06, o.y + o.T + o.r * k * 0.1, o.r * 1.12, o.r * k * 1.15, 0.4);
+  }
+  // legs
+  if (legsOut){
+    for (const L of legGeometry(o)){
+      const { ax, ay, w, tipY } = L, sh = Math.min(w * 1.1, (tipY - ay) * 0.4);
+      ctx.beginPath(); ctx.moveTo(ax - w/2, ay); ctx.lineTo(ax, ay); ctx.lineTo(ax, tipY); ctx.lineTo(ax - w/2, tipY - sh); ctx.closePath();
+      ctx.fillStyle = shade(color, lum(color) > .5 ? -0.06 : 0.1); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + w/2, ay); ctx.lineTo(ax + w/2, tipY - sh); ctx.lineTo(ax, tipY); ctx.closePath();
+      ctx.fillStyle = shade(color, lum(color) > .5 ? -0.22 : -0.15); ctx.fill();
+      if (o.legs === 'stand') drawShadow(ctx, ax + 4, tipY + 2, w * 0.8, w * 0.25, 0.35);
+    }
+  }
+  // side wall
+  ctx.beginPath(); ctx.moveTo(o.x + o.r, o.y);
+  ctx.ellipse(o.x, o.y + o.T, o.r, o.r * k, 0, 0, Math.PI, false);
+  ctx.lineTo(o.x - o.r, o.y);
+  ctx.ellipse(o.x, o.y, o.r, o.r * k, 0, Math.PI, 0, true);
+  ctx.closePath();
+  const sg = ctx.createLinearGradient(o.x - o.r, 0, o.x + o.r, 0);
+  const light = lum(color) > 0.5;
+  sg.addColorStop(0, shade(color, light ? -0.2 : 0.02)); sg.addColorStop(0.32, shade(color, light ? 0.02 : 0.14));
+  sg.addColorStop(0.55, shade(color, light ? -0.04 : 0.06)); sg.addColorStop(1, shade(color, light ? -0.3 : -0.25));
+  ctx.fillStyle = sg; ctx.fill();
+  // groove
+  ctx.save(); ctx.strokeStyle = light ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.08)'; ctx.lineWidth = Math.max(1, o.T * 0.05);
+  ctx.beginPath(); ctx.ellipse(o.x, o.y + o.T * 0.22, o.r, o.r * k, 0, 0.05, Math.PI - 0.05); ctx.stroke(); ctx.restore();
+  drawRimText(ctx, o, color);
+  // top face
+  ctx.beginPath(); ctx.ellipse(o.x, o.y, o.r, o.r * k, 0, 0, Math.PI * 2);
+  ctx.fillStyle = shade(color, light ? 0.3 : 0.12); ctx.fill();
+  drawDesign(ctx, o.x, o.y + o.r * k * 0.015, rin, k, color, 0);
+  // inner lip shading
+  ctx.save(); ctx.beginPath(); ctx.ellipse(o.x, o.y + o.r * k * 0.015, rin, rin * k, 0, 0, Math.PI * 2);
+  const lg = ctx.createLinearGradient(0, o.y - o.r * k, 0, o.y + o.r * k);
+  lg.addColorStop(0, 'rgba(0,0,0,.3)'); lg.addColorStop(0.5, 'rgba(0,0,0,.04)'); lg.addColorStop(1, 'rgba(255,255,255,.45)');
+  ctx.strokeStyle = lg; ctx.lineWidth = Math.max(1.5, o.r * 0.018); ctx.stroke();
+  const gl = ctx.createLinearGradient(o.x - o.r, o.y - o.r * k, o.x + o.r * 0.4, o.y + o.r * k);
+  gl.addColorStop(0, 'rgba(255,255,255,.22)'); gl.addColorStop(0.5, 'rgba(255,255,255,.03)'); gl.addColorStop(1, 'rgba(0,0,0,.06)');
+  ctx.fillStyle = gl; ctx.fill(); ctx.restore();
+  if (o.cup && state.drinks) drawCup(ctx, o.x - o.r * 0.03, o.y + o.r * k * 0.04, o.r, k, o.cup);
+}
+
+/* =========================================================
+   Scenes (procedural backgrounds, cached)
+   ========================================================= */
+function grassBlades(g, R, n, y0, y1, hz, opt){
+  opt = opt || {};
+  const arr = [];
+  for (let i = 0; i < n; i++){
+    const y = y0 + (y1 - y0) * Math.pow(R(), opt.pow || 0.8);
+    arr.push({ y, x: (opt.x0 ?? 0) + R() * ((opt.x1 ?? W) - (opt.x0 ?? 0)), r: R(), s: R(), l: R() });
+  }
+  arr.sort((a, b) => a.y - b.y);
+  for (const b of arr){
+    const t = Math.max(0, Math.min(1, (b.y - hz) / (H - hz)));
+    const h = ((opt.hmin || 6) + b.r * (opt.hvar || 16)) * (0.25 + t * 1.7);
+    const lean = (b.s - 0.5) * h * 0.7;
+    const hue = (opt.hue || 92) + b.s * 26, sat = 42 + b.l * 22, li = (opt.light || 30) + b.l * 22 - t * 8;
+    g.strokeStyle = `hsl(${hue},${sat}%,${li}%)`;
+    g.lineWidth = 0.6 + t * (opt.wid || 2.6);
+    g.beginPath(); g.moveTo(b.x, b.y); g.quadraticCurveTo(b.x + lean * 0.2, b.y - h * 0.6, b.x + lean, b.y - h); g.stroke();
+  }
+}
+function bokeh(g, R, n, y0, y1, cols){
+  for (let i = 0; i < n; i++){
+    const x = R() * W, y = y0 + R() * (y1 - y0), r = 4 + R() * 26, c = cols[Math.floor(R() * cols.length)];
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, c.replace('A', (0.25 + R() * 0.4).toFixed(2))); gr.addColorStop(1, c.replace('A', '0'));
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  }
+}
+function speckle(g, R, n, y0, y1, cols, smax){
+  for (let i = 0; i < n; i++){ g.fillStyle = cols[Math.floor(R() * cols.length)]; const s = 0.6 + R() * (smax || 1.8); g.fillRect(R() * W, y0 + R() * (y1 - y0), s, s); }
+}
+
+const SCENES = {
+  lawn: {
+    label: 'Event lawn', hz: 330,
+    items: [
+      { x: 360, y: 440, r: 125, k: 0.36, T: 24, legs: 'ground', L: 80, cup: 'rose' },
+      { x: 770, y: 540, r: 185, k: 0.38, T: 34, legs: 'ground', L: 112, cup: null },
+    ],
+    bg(g){
+      const R = rng(11), hz = 330;
+      let sk = g.createLinearGradient(0, 0, 0, hz); sk.addColorStop(0, '#36566B'); sk.addColorStop(0.55, '#B99C86'); sk.addColorStop(1, '#F1C79A');
+      g.fillStyle = sk; g.fillRect(0, 0, W, hz + 2);
+      // tent + tree silhouettes
+      g.fillStyle = 'rgba(40,62,52,.55)';
+      for (let i = 0; i < 26; i++){ const x = R() * W, r = 40 + R() * 70; g.beginPath(); g.arc(x, hz - 20 + R() * 20, r, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = 'rgba(250,244,236,.75)';
+      g.beginPath(); g.moveTo(820, hz - 10); g.lineTo(880, hz - 95); g.lineTo(1060, hz - 95); g.lineTo(1120, hz - 10); g.closePath(); g.fill();
+      g.fillStyle = 'rgba(255,236,200,.35)'; g.fillRect(845, hz - 52, 250, 42);
+      bokeh(g, R, 60, 120, hz, ['rgba(255,220,160,A)', 'rgba(255,255,230,A)', 'rgba(255,190,140,A)']);
+      // string lights
+      for (let s = 0; s < 3; s++){
+        const y0 = 40 + s * 55, sag = 70 + s * 20; g.strokeStyle = 'rgba(30,30,30,.45)'; g.lineWidth = 1.4;
+        g.beginPath(); g.moveTo(-20, y0); g.quadraticCurveTo(W / 2, y0 + sag * 2, W + 20, y0 + 10); g.stroke();
+        for (let t = 0.02; t < 1; t += 0.045){
+          const x = (1 - t) * (1 - t) * -20 + 2 * (1 - t) * t * (W / 2) + t * t * (W + 20);
+          const y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * (y0 + sag * 2) + t * t * (y0 + 10) + 6;
+          const gr = g.createRadialGradient(x, y, 0, x, y, 18); gr.addColorStop(0, 'rgba(255,240,190,.95)'); gr.addColorStop(0.25, 'rgba(255,214,140,.55)'); gr.addColorStop(1, 'rgba(255,200,120,0)');
+          g.fillStyle = gr; g.beginPath(); g.arc(x, y, 18, 0, Math.PI * 2); g.fill();
+        }
+      }
+      let gg = g.createLinearGradient(0, hz, 0, H); gg.addColorStop(0, '#8FB463'); gg.addColorStop(0.35, '#5E9440'); gg.addColorStop(1, '#2F6526');
+      g.fillStyle = gg; g.fillRect(0, hz, W, H - hz);
+      g.fillStyle = 'rgba(241,199,154,.25)'; g.fillRect(0, hz, W, 26);
+      grassBlades(g, R, 9000, hz, H + 30, hz, {});
+    },
+    fg(g){ fgGrass(g, this.items, {}); },
+  },
+  beach: {
+    label: 'Beach', hz: 300,
+    items: [
+      { x: 365, y: 445, r: 125, k: 0.36, T: 24, legs: 'sand', L: 72, cup: 'lemonade' },
+      { x: 775, y: 545, r: 185, k: 0.38, T: 34, legs: 'sand', L: 100, cup: null },
+    ],
+    bg(g){
+      const R = rng(21), hz = 300;
+      let sk = g.createLinearGradient(0, 0, 0, hz); sk.addColorStop(0, '#5EB8E6'); sk.addColorStop(1, '#DDF2FA');
+      g.fillStyle = sk; g.fillRect(0, 0, W, hz);
+      for (let i = 0; i < 5; i++){ const cx = R() * W, cy = 40 + R() * 140; g.fillStyle = 'rgba(255,255,255,.7)'; for (let j = 0; j < 6; j++){ g.beginPath(); g.ellipse(cx + j * 26 - 60, cy + Math.sin(j) * 8, 40 + R() * 30, 16 + R() * 10, 0, 0, Math.PI * 2); g.fill(); } }
+      let sea = g.createLinearGradient(0, hz, 0, 385); sea.addColorStop(0, '#1A6FA6'); sea.addColorStop(1, '#48B8D2');
+      g.fillStyle = sea; g.fillRect(0, hz, W, 90);
+      g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1.5;
+      for (let i = 0; i < 40; i++){ const y = hz + 8 + R() * 70, x = R() * W; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 20 + R() * 60, y); g.stroke(); }
+      let sand = g.createLinearGradient(0, 380, 0, H); sand.addColorStop(0, '#D9C29C'); sand.addColorStop(0.15, '#EBD7B2'); sand.addColorStop(1, '#E0C292');
+      g.fillStyle = sand; g.beginPath(); g.moveTo(0, 388);
+      for (let x = 0; x <= W; x += 40) g.lineTo(x, 384 + Math.sin(x / 90) * 6);
+      g.lineTo(W, H); g.lineTo(0, H); g.closePath(); g.fill();
+      g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 4; g.beginPath(); g.moveTo(0, 386);
+      for (let x = 0; x <= W; x += 40) g.lineTo(x, 382 + Math.sin(x / 90) * 6); g.stroke();
+      g.strokeStyle = 'rgba(150,115,70,.12)'; g.lineWidth = 2;
+      for (let i = 0; i < 60; i++){ const y = 420 + R() * 380, x = R() * W, w = 60 + R() * 160; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + w / 2, y - 6, x + w, y); g.stroke(); }
+      speckle(g, R, 14000, 400, H, ['rgba(120,90,50,.25)', 'rgba(255,255,255,.5)', 'rgba(160,120,70,.2)'], 2.2);
+      // umbrella
+      g.fillStyle = 'rgba(0,0,0,.08)'; g.beginPath(); g.ellipse(1060, 470, 170, 34, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = '#EEE'; g.lineWidth = 6; g.beginPath(); g.moveTo(1050, 470); g.lineTo(1030, 230); g.stroke();
+      const cols = ['#FF7A1A', '#FFFFFF']; for (let i = 0; i < 6; i++){ g.fillStyle = cols[i % 2]; g.beginPath(); g.moveTo(1030, 200); g.lineTo(880 + i * 52, 262 - Math.sin(i / 5 * Math.PI) * 18); g.lineTo(932 + i * 52, 262 - Math.sin((i + 1) / 5 * Math.PI) * 18); g.closePath(); g.fill(); }
+    },
+    fg(g){
+      const R = rng(5);
+      for (const o of this.items) for (const L of legGeometry(o).filter(l => Math.sin(l.a) > 0)){
+        const w = L.w * 1.9, h = L.w * 0.55;
+        const gr = g.createRadialGradient(L.ax, L.tipY - 2, 0, L.ax, L.tipY - 2, w);
+        gr.addColorStop(0, '#E4CB9F'); gr.addColorStop(0.7, 'rgba(228,203,159,.9)'); gr.addColorStop(1, 'rgba(228,203,159,0)');
+        g.save(); g.translate(L.ax, L.tipY); g.scale(1, h / w); g.translate(-L.ax, -L.tipY); g.fillStyle = gr; g.beginPath(); g.arc(L.ax, L.tipY, w, 0, Math.PI * 2); g.fill(); g.restore();
+        for (let i = 0; i < 90; i++){ g.fillStyle = R() > .5 ? 'rgba(130,95,55,.35)' : 'rgba(255,255,255,.6)'; g.fillRect(L.ax + (R() - 0.5) * w * 1.6, L.tipY + (R() - 0.5) * h * 1.4, 1.4, 1.4); }
+      }
+    },
+  },
+  golf: {
+    label: 'Golf course', hz: 290,
+    items: [
+      { x: 420, y: 455, r: 125, k: 0.36, T: 24, legs: 'ground', L: 80, cup: 'beer' },
+      { x: 800, y: 545, r: 180, k: 0.38, T: 32, legs: 'ground', L: 108, cup: null },
+    ],
+    bg(g){
+      const R = rng(31), hz = 290;
+      let sk = g.createLinearGradient(0, 0, 0, hz); sk.addColorStop(0, '#7EC3EA'); sk.addColorStop(1, '#E7F4FA');
+      g.fillStyle = sk; g.fillRect(0, 0, W, hz);
+      for (let i = 0; i < 70; i++){ const x = R() * W, r = 22 + R() * 46; g.fillStyle = `hsl(${120 + R() * 20},${30 + R() * 15}%,${22 + R() * 12}%)`; g.beginPath(); g.arc(x, hz - 18 - R() * 30, r, 0, Math.PI * 2); g.fill(); }
+      let fw = g.createLinearGradient(0, hz, 0, H); fw.addColorStop(0, '#9CC86A'); fw.addColorStop(1, '#3F8434');
+      g.fillStyle = fw; g.fillRect(0, hz, W, H - hz);
+      g.save(); g.beginPath(); g.rect(0, hz, W, H - hz); g.clip();
+      for (let i = -12; i < 12; i += 2){ g.fillStyle = 'rgba(255,255,255,.07)'; g.beginPath(); g.moveTo(600 + i * 40, hz); g.lineTo(600 + (i + 1) * 40, hz); g.lineTo(600 + (i + 1) * 420, H); g.lineTo(600 + i * 420, H); g.closePath(); g.fill(); }
+      g.restore();
+      g.fillStyle = 'rgba(180,220,130,.6)'; g.beginPath(); g.ellipse(250, hz + 22, 150, 16, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = '#F5F5F5'; g.lineWidth = 3; g.beginPath(); g.moveTo(250, hz + 22); g.lineTo(250, hz - 70); g.stroke();
+      g.fillStyle = '#E5372A'; g.beginPath(); g.moveTo(250, hz - 70); g.lineTo(292, hz - 58); g.lineTo(250, hz - 46); g.closePath(); g.fill();
+      grassBlades(g, R, 6000, hz, H + 20, hz, { hmin: 3, hvar: 7, wid: 2, light: 32 });
+    },
+    fg(g){
+      fgGrass(g, this.items, { hmin: 3, hvar: 7, wid: 2, light: 32 });
+      const o = this.items[1], bx = o.x + o.r * 1.4, by = o.y + o.T + o.L + 22, br = 24;
+      drawShadow(g, bx + 8, by + br * 0.7, br * 1.4, br * 0.4, 0.4);
+      const bg = g.createRadialGradient(bx - br * .35, by - br * .4, 2, bx, by, br * 1.1); bg.addColorStop(0, '#FFFFFF'); bg.addColorStop(1, '#C9CED2');
+      g.fillStyle = bg; g.beginPath(); g.arc(bx, by, br, 0, Math.PI * 2); g.fill();
+      g.fillStyle = 'rgba(0,0,0,.06)'; const R = rng(3); for (let i = 0; i < 30; i++){ const a = R() * 6.28, d = R() * br * .85; g.beginPath(); g.arc(bx + Math.cos(a) * d, by + Math.sin(a) * d, 2, 0, 6.28); g.fill(); }
+      fgGrassAt(g, bx - br * 2, bx + br * 2, by + br * 0.4, by + br * 1.1, 160, { hmin: 3, hvar: 6, wid: 2, light: 32 });
+    },
+  },
+  table: {
+    label: 'Picnic table', hz: 0,
+    items: [
+      { x: 420, y: 400, r: 150, k: 0.46, T: 22, legs: 'folded', cup: 'coffee' },
+      { x: 800, y: 470, r: 185, k: 0.46, T: 26, legs: 'folded', cup: null },
+    ],
+    bg(g){
+      const R = rng(41);
+      let y = 0, h = 70, i = 0;
+      while (y < H){
+        const base = ['#A26D42', '#9A6439', '#A8744A', '#94603A'][i % 4];
+        g.fillStyle = base; g.fillRect(0, y, W, h);
+        for (let j = 0; j < 26; j++){
+          g.strokeStyle = `rgba(${R() > 0.5 ? '60,35,15' : '200,150,100'},${0.08 + R() * 0.12})`; g.lineWidth = 0.6 + R() * 1.6;
+          const yy = y + R() * h, amp = 1 + R() * 4, f = 60 + R() * 200, ph = R() * 9;
+          g.beginPath(); for (let x = 0; x <= W; x += 20) g.lineTo(x, yy + Math.sin(x / f + ph) * amp); g.stroke();
+        }
+        if (R() > 0.4){ const kx = R() * W, ky = y + h * (0.3 + R() * 0.4); g.strokeStyle = 'rgba(60,35,15,.25)'; for (let r = 4; r < 18; r += 4){ g.beginPath(); g.ellipse(kx, ky, r * 2.2, r * 0.6, 0, 0, Math.PI * 2); g.stroke(); } }
+        g.fillStyle = 'rgba(40,22,10,.55)'; g.fillRect(0, y + h - 4, W, 4);
+        g.fillStyle = 'rgba(255,220,180,.12)'; g.fillRect(0, y, W, 2);
+        y += h; h *= 1.22; i++;
+      }
+      const v = g.createRadialGradient(W * 0.35, H * 0.2, 100, W / 2, H / 2, W * 0.75); v.addColorStop(0, 'rgba(255,230,190,.18)'); v.addColorStop(1, 'rgba(0,0,0,.35)');
+      g.fillStyle = v; g.fillRect(0, 0, W, H);
+      g.fillStyle = 'rgba(30,60,30,.18)';
+      for (let j = 0; j < 9; j++){ g.beginPath(); g.ellipse(1080 + j * 14, 120 + j * 22, 90, 26, 0.6, 0, Math.PI * 2); g.fill(); }
+    },
+  },
+  top: {
+    label: 'Top view', hz: 0,
+    items: [
+      { x: 430, y: 410, r: 230, k: 1, T: 0, legs: 'folded', rot: -10 },
+      { x: 880, y: 330, r: 150, k: 1, T: 0, legs: 'folded', rot: 24 },
+      { x: 930, y: 640, r: 120, k: 1, T: 0, legs: 'folded', rot: -30 },
+    ],
+    bg(g){
+      const R = rng(51);
+      g.fillStyle = '#EDE6DA'; g.fillRect(0, 0, W, H);
+      for (let i = 0; i < 1400; i++){ g.strokeStyle = `rgba(${R() > .5 ? '120,100,80' : '255,255,255'},${0.05 + R() * 0.08})`; g.lineWidth = 1; const y = R() * H; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y + (R() - 0.5) * 4); g.stroke(); }
+      for (let i = 0; i < 700; i++){ g.strokeStyle = `rgba(120,100,80,${0.03 + R() * 0.05})`; const x = R() * W; g.beginPath(); g.moveTo(x, 0); g.lineTo(x + (R() - .5) * 4, H); g.stroke(); }
+      g.fillStyle = 'rgba(70,100,60,.22)';
+      for (let j = 0; j < 7; j++){ g.save(); g.translate(120 + j * 18, 690 - j * 30); g.rotate(-0.9 + j * 0.15); g.beginPath(); g.ellipse(0, 0, 70, 22, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+    },
+  },
+  studio: {
+    label: 'Studio', hz: 0,
+    items: [ { x: 600, y: 330, r: 270, k: 0.42, T: 52, legs: 'stand', L: 230 } ],
+    bg(g){
+      const gr = g.createRadialGradient(600, 320, 50, 600, 420, 800); gr.addColorStop(0, '#FFFFFF'); gr.addColorStop(1, '#D5E1E9');
+      g.fillStyle = gr; g.fillRect(0, 0, W, H);
+      const fl = g.createLinearGradient(0, 560, 0, H); fl.addColorStop(0, 'rgba(255,255,255,0)'); fl.addColorStop(1, 'rgba(160,180,195,.25)');
+      g.fillStyle = fl; g.fillRect(0, 560, W, H - 560);
+    },
+  },
+};
+const SCENE_ORDER = ['lawn', 'beach', 'golf', 'table', 'top', 'studio'];
+
+function fgGrassAt(g, x0, x1, y0, y1, n, opt){
+  const R = rng(Math.round(x0 * 7 + y0 * 13));
+  grassBlades(g, R, n, y0, y1, 330, Object.assign({ x0, x1, pow: 1 }, opt));
+}
+function fgGrass(g, items, opt){
+  for (const o of items){
+    const fb = o.y + o.T + o.r * o.k; // front-bottom edge of the body
+    for (const L of legGeometry(o)) if (Math.sin(L.a) > 0)
+      fgGrassAt(g, L.ax - L.w * 1.8, L.ax + L.w * 1.8, L.tipY - 10, L.tipY + 12, 140, Object.assign({ hmin: 12, hvar: 18 }, opt));
+    const tip = o.y + o.T + o.L;
+    fgGrassAt(g, o.x - o.r * 1.25, o.x + o.r * 1.25, fb + 8, tip + o.r * 0.25, 900, Object.assign({ hmin: 5, hvar: 10 }, opt));
+  }
+}
+
+const cache = {};
+function sceneLayers(id){
+  if (cache[id]) return cache[id];
+  const s = SCENES[id], bg = mk(W, H); s.bg(bg.getContext('2d'));
+  let fg = null; if (s.fg){ fg = mk(W, H); const g = fg.getContext('2d'); g.lineCap = 'round'; s.fg(g); }
+  return (cache[id] = { bg, fg });
+}
+function renderScene(ctx, id, scale){
+  const s = SCENES[id], L = sceneLayers(id);
+  ctx.save(); ctx.setTransform(scale || 1, 0, 0, scale || 1, 0, 0);
+  ctx.drawImage(L.bg, 0, 0, W, H);
+  const items = s.items.slice().sort((a, b) => a.y - b.y);
+  for (const o of items) drawCoaster(ctx, o);
+  if (L.fg) ctx.drawImage(L.fg, 0, 0, W, H);
+  ctx.restore();
+}
+
+/* =========================================================
+   Sample designs (drawn in code, no external images)
+   ========================================================= */
+function circText(g, text, r, size, color, start){
+  g.save(); g.font = `800 ${size}px "Bricolage Grotesque", Inter, sans-serif`; g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle';
+  const total = text.split('').reduce((a, c) => a + g.measureText(c).width + size * 0.12, 0);
+  let ang = (start ?? -Math.PI / 2) - total / r / 2;
+  for (const ch of text){ const w = g.measureText(ch).width + size * 0.12; ang += w / 2 / r; g.save(); g.translate(400 + Math.cos(ang) * r, 400 + Math.sin(ang) * r); g.rotate(ang + Math.PI / 2); g.fillText(ch, 0, 0); g.restore(); ang += w / 2 / r; }
+  g.restore();
+}
+const SAMPLES = [
+  { name: 'Sunset', fit: 'cover', draw(g){
+    const sk = g.createLinearGradient(0, 0, 0, 800); sk.addColorStop(0, '#5B3A8C'); sk.addColorStop(0.45, '#FF6F61'); sk.addColorStop(0.62, '#FFB347'); g.fillStyle = sk; g.fillRect(0, 0, 800, 800);
+    g.fillStyle = '#FFE27A'; g.beginPath(); g.arc(400, 470, 190, 0, Math.PI * 2); g.fill();
+    const sea = g.createLinearGradient(0, 480, 0, 800); sea.addColorStop(0, '#1E5A8C'); sea.addColorStop(1, '#0E2B4D'); g.fillStyle = sea; g.fillRect(0, 480, 800, 320);
+    g.fillStyle = 'rgba(255,226,122,.85)'; for (let i = 0; i < 9; i++){ const w = 300 - i * 30; g.fillRect(400 - w / 2, 505 + i * 26, w, 7); }
+    g.fillStyle = '#2A1C40'; g.beginPath(); g.moveTo(140, 480); g.quadraticCurveTo(150, 330, 230, 250); g.lineTo(238, 256); g.quadraticCurveTo(168, 340, 160, 480); g.fill();
+    for (let i = 0; i < 5; i++){ g.save(); g.translate(234, 252); g.rotate(-2.6 + i * 0.75); g.beginPath(); g.ellipse(60, 0, 70, 14, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+  }},
+  { name: 'Wedding monogram', fit: 'cover', draw(g){
+    g.fillStyle = '#F7F1E6'; g.fillRect(0, 0, 800, 800);
+    g.strokeStyle = '#B48C57'; g.lineWidth = 6; g.beginPath(); g.arc(400, 400, 300, 0, Math.PI * 2); g.stroke();
+    g.lineWidth = 2; g.beginPath(); g.arc(400, 400, 280, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = '#3B3A36'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = 'italic 600 210px "Playfair Display", Georgia, serif'; g.fillText('S&D', 400, 380);
+    g.font = '600 34px Inter, sans-serif'; g.fillStyle = '#8A6B42'; g.fillText('0 6 · 2 0 · 2 0 2 7', 400, 530);
+    g.strokeStyle = '#8FA27E'; g.lineWidth = 3; for (const s of [-1, 1]){ g.beginPath(); g.moveTo(400 + s * 60, 600); g.quadraticCurveTo(400 + s * 150, 610, 400 + s * 200, 570); g.stroke(); for (let i = 1; i < 5; i++){ g.fillStyle = '#8FA27E'; g.beginPath(); g.ellipse(400 + s * (60 + i * 33), 604 - i * 5, 12, 5, s * -0.5, 0, Math.PI * 2); g.fill(); } }
+  }},
+  { name: 'Brewery logo', fit: 'cover', draw(g){
+    g.fillStyle = '#10283A'; g.fillRect(0, 0, 800, 800);
+    g.strokeStyle = '#F28C28'; g.lineWidth = 22; g.beginPath(); g.arc(400, 400, 330, 0, Math.PI * 2); g.stroke();
+    circText(g, 'HOPYARD BREWING CO.', 262, 52, '#FFFFFF');
+    circText(g, '★ EST. 2026 ★', 262, 38, '#F28C28', Math.PI / 2 + Math.PI);
+    for (let row = 0; row < 5; row++){ const n = 4 - Math.abs(row - 1.6) | 0 || 1; for (let i = 0; i < n; i++){ g.fillStyle = row % 2 ? '#8BC34A' : '#7CB342'; g.beginPath(); g.ellipse(400 + (i - (n - 1) / 2) * 52, 330 + row * 44, 30, 26, 0, 0, Math.PI * 2); g.fill(); } }
+    g.strokeStyle = '#7CB342'; g.lineWidth = 8; g.beginPath(); g.moveTo(400, 300); g.quadraticCurveTo(420, 260, 460, 255); g.stroke();
+  }},
+  { name: 'Golf club', fit: 'cover', draw(g){
+    g.fillStyle = '#1E5B3A'; g.fillRect(0, 0, 800, 800);
+    for (let i = 0; i < 800; i += 80){ g.fillStyle = 'rgba(255,255,255,.05)'; g.fillRect(i, 0, 40, 800); }
+    g.strokeStyle = '#F4EBD0'; g.lineWidth = 5; g.beginPath(); g.arc(400, 400, 320, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = '#F4EBD0'; g.lineWidth = 8; g.beginPath(); g.moveTo(400, 410); g.lineTo(400, 190); g.stroke();
+    g.fillStyle = '#E5372A'; g.beginPath(); g.moveTo(404, 190); g.lineTo(500, 222); g.lineTo(404, 254); g.closePath(); g.fill();
+    g.fillStyle = '#F4EBD0'; g.beginPath(); g.ellipse(400, 414, 70, 14, 0, 0, Math.PI * 2); g.fill();
+    g.textAlign = 'center'; g.font = '800 104px "Bricolage Grotesque", Inter, sans-serif'; g.fillText('PINE HILL', 400, 530);
+    g.font = '700 36px Inter, sans-serif'; g.fillText('G O L F   C L U B', 400, 590);
+  }},
+];
+
+/* =========================================================
+   App wiring
+   ========================================================= */
+const main = $('#main'), mctx = main.getContext('2d');
+const editor = $('#editor'), ectx = editor.getContext('2d');
+const thumbs = {};
+let raf = 0, thumbTimer = 0;
+
+function renderEditor(){
+  const s = editor.width, r = s / 2;
+  ectx.clearRect(0, 0, s, s);
+  ectx.save(); ectx.beginPath(); ectx.arc(r, r, r, 0, Math.PI * 2); ectx.clip();
+  ectx.fillStyle = state.color; ectx.fillRect(0, 0, s, s);
+  drawDesign(ectx, r, r, r * 0.885, 1, state.color, 0);
+  ectx.restore();
+  ectx.save(); ectx.strokeStyle = 'rgba(0,0,0,.18)'; ectx.lineWidth = 3; ectx.beginPath(); ectx.arc(r, r, r * 0.885, 0, Math.PI * 2); ectx.stroke();
+  ectx.setLineDash([6, 6]); ectx.strokeStyle = 'rgba(255,255,255,.7)'; ectx.lineWidth = 2; ectx.beginPath(); ectx.arc(r, r, r * 0.8, 0, Math.PI * 2); ectx.stroke(); ectx.restore();
+}
+function renderAll(){
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => {
+    renderScene(mctx, state.scene, 1);
+    renderEditor();
+    renderSteps();
+    for (const id of ['poThumb', 'bizThumb']){ const c = $('#' + id); renderScene(c.getContext('2d'), 'lawn', c.width / W); }
+    $('#poDesignLabel').textContent = state.design.name;
+  });
+  clearTimeout(thumbTimer);
+  thumbTimer = setTimeout(() => { for (const id of SCENE_ORDER){ const c = thumbs[id]; renderScene(c.getContext('2d'), id, c.width / W); } }, 120);
+}
+
+// scene tabs
+const scenesEl = $('#scenes');
+for (const id of SCENE_ORDER){
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'scene-btn'; b.setAttribute('aria-pressed', id === state.scene);
+  const c = mk(300, 200); thumbs[id] = c; b.appendChild(c);
+  const sp = document.createElement('span'); sp.textContent = SCENES[id].label; b.appendChild(sp);
+  b.onclick = () => { state.scene = id; scenesEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderScene(mctx, id, 1); track('scene_view', { scene: id }); };
+  scenesEl.appendChild(b);
+}
+
+// colors
+const sw = $('#swatches');
+for (const c of CONFIG.colors){
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'swatch'; b.style.background = c.hex; b.title = c.name; b.setAttribute('aria-label', c.name); b.setAttribute('aria-pressed', c.hex === state.color);
+  b.onclick = () => { state.color = c.hex; sw.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderAll(); };
+  sw.appendChild(b);
+}
+
+// samples
+const samplesEl = $('#samples');
+const sampleCanvases = [];
+function useImage(img, name, custom, fit){
+  const d = state.design; d.img = img; d.name = name; d.custom = custom; d.fit = fit || 'cover'; d.zoom = 1; d.ox = 0; d.oy = 0; d.rot = 0;
+  $('#zoom').value = 1; $('#rot').value = 0;
+  $('#fitSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === d.fit));
+  samplesEl.querySelectorAll('.sample').forEach(x => x.setAttribute('aria-pressed', !custom && x.dataset.name === name));
+  renderAll();
+}
+function buildSamples(){
+  SAMPLES.forEach((s) => {
+    const c = mk(800); s.draw(c.getContext('2d')); sampleCanvases.push(c);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sample'; b.dataset.name = s.name; b.title = s.name; b.setAttribute('aria-label', 'Sample: ' + s.name);
+    const t = mk(88); t.getContext('2d').drawImage(c, 0, 0, 88, 88); b.appendChild(t);
+    b.onclick = () => { useImage(c, s.name, false, s.fit); track('sample_pick', { name: s.name }); };
+    samplesEl.appendChild(b);
+  });
+}
+
+// user image loading
+function loadFile(file){
+  if (!file || !/^image\//.test(file.type)){ toast('Please choose an image file (JPG, PNG, WebP…)'); return; }
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => {
+    const max = 1600, s = Math.min(1, max / Math.max(img.width, img.height));
+    const c = mk(Math.round(img.width * s), Math.round(img.height * s)); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    const isLogo = /png|svg|webp/.test(file.type) && hasTransparency(c);
+    useImage(c, 'Your image', true, isLogo ? 'contain' : 'cover');
+    toast(isLogo ? 'Logo detected: switched to "Fit" layout' : 'Looking good! Try the other scenes ↓');
+    track('image_upload', { type: file.type });
+    if (innerWidth < 1020) document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); toast("Couldn't read that image. Try a JPG or PNG."); };
+  img.src = url;
+}
+function hasTransparency(c){
+  try { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < d.length; i += 4 * 97) if (d[i] < 200) return true; } catch(e){}
+  return false;
+}
+$('#file').onchange = e => loadFile(e.target.files[0]);
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => loadFile(e.dataTransfer.files[0]));
+document.addEventListener('paste', e => {
+  const items = e.clipboardData ? [...e.clipboardData.items] : [];
+  const it = items.find(i => i.type.startsWith('image/'));
+  if (it){ e.preventDefault(); loadFile(it.getAsFile()); }
+});
+$('#pasteBtn').onclick = async () => {
+  try {
+    const items = await navigator.clipboard.read();
+    for (const it of items){ const t = it.types.find(x => x.startsWith('image/')); if (t){ const b = await it.getType(t); loadFile(new File([b], 'pasted', { type: t })); return; } }
+    toast('No image on your clipboard. Copy an image first.');
+  } catch(e){ toast('Press Ctrl/⌘ + V to paste your image'); }
+};
+
+// editor drag / zoom
+const ptrs = new Map(); let pinch0 = 0, zoom0 = 1;
+editor.addEventListener('pointerdown', e => { editor.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; pinch0 = Math.hypot(a.x - b.x, a.y - b.y); zoom0 = state.design.zoom; } });
+editor.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return;
+  const prev = ptrs.get(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); setZoom(zoom0 * d / pinch0); return; }
+  const size = editor.getBoundingClientRect().width * 0.885;
+  state.design.ox += (e.clientX - prev.x) / size; state.design.oy += (e.clientY - prev.y) / size;
+  state.design.ox = Math.max(-1, Math.min(1, state.design.ox)); state.design.oy = Math.max(-1, Math.min(1, state.design.oy));
+  renderAll();
+});
+['pointerup', 'pointercancel'].forEach(ev => editor.addEventListener(ev, e => ptrs.delete(e.pointerId)));
+editor.addEventListener('wheel', e => { e.preventDefault(); setZoom(state.design.zoom * (e.deltaY < 0 ? 1.06 : 0.94)); }, { passive: false });
+function setZoom(z){ state.design.zoom = Math.max(0.5, Math.min(3, z)); $('#zoom').value = state.design.zoom; renderAll(); }
+$('#zoom').oninput = e => { state.design.zoom = +e.target.value; renderAll(); };
+$('#rot').oninput = e => { state.design.rot = +e.target.value; renderAll(); };
+$('#fitSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; state.design.fit = b.dataset.v; state.design.zoom = 1; $('#zoom').value = 1; $('#fitSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderAll(); };
+$('#rim').oninput = e => { state.rim = e.target.value; renderAll(); };
+$('#drinks').onchange = e => { state.drinks = e.target.checked; renderAll(); };
+
+// download / share
+function mockupBlob(){ return new Promise(res => main.toBlob(res, 'image/jpeg', 0.92)); }
+$('#dlBtn').onclick = async () => {
+  const b = await mockupBlob(); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `coastee-${state.scene}.jpg`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  track('mockup_download', { scene: state.scene });
+};
+async function shareDesign(){
+  const b = await mockupBlob(); const file = new File([b], 'my-coastee.jpg', { type: 'image/jpeg' });
+  const data = { title: 'My CoasTee', text: 'Check out my custom CoasTee 🌿 the coaster that plants into grass and sand.', url: location.href.split('#')[0] };
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ ...data, files: [file] });
+    else if (navigator.share) await navigator.share(data);
+    else { await navigator.clipboard.writeText(data.url); toast('Link copied!'); }
+    track('mockup_share', {});
+  } catch(e){}
+}
+if (navigator.share){ $('#shareBtn').hidden = false; $('#shareBtn').onclick = shareDesign; }
+$('#poShare').onclick = shareDesign;
+
+// how-it-works steps (transparent mini renders)
+function renderSteps(){
+  const conf = [
+    { id: 'step1', o: { x: 300, y: 170, r: 175, k: 0.42, T: 34, legs: 'stand', L: 150 } },
+    { id: 'step2', o: { x: 300, y: 150, r: 175, k: 0.42, T: 34, legs: 'ground', L: 130 }, ground: true },
+    { id: 'step3', o: { x: 300, y: 205, r: 190, k: 0.42, T: 30, legs: 'folded' } },
+  ];
+  for (const c of conf){
+    const cv = $('#' + c.id), g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height);
+    if (c.ground){
+      const gy = c.o.y + c.o.T + c.o.r * c.o.k + 20;
+      const gr = g.createLinearGradient(0, gy - 40, 0, cv.height); gr.addColorStop(0, '#9CC86A'); gr.addColorStop(1, '#4A8A3A');
+      g.fillStyle = gr; g.fillRect(0, gy - 40, cv.width, cv.height);
+      g.lineCap = 'round'; grassBlades(g, rng(4), 1200, gy - 40, cv.height + 10, gy - 40, { x1: cv.width, hmin: 6, hvar: 10, wid: 1.5 });
+    }
+    drawCoaster(g, c.o);
+    if (c.ground){ g.lineCap = 'round'; fgGrass(g, [c.o], { wid: 1.5 }); }
+  }
+}
+
+// hero rotation
+const heroA = $('#heroA'), heroB = $('#heroB'); let heroFront = heroA, heroIdx = 0;
+const heroScenes = [['lawn', 'Garden party'], ['beach', 'Beach day'], ['golf', 'On the course'], ['table', 'Picnic table']];
+function heroRender(target, idx){
+  const prev = { img: state.design.img, name: state.design.name, fit: state.design.fit, zoom: state.design.zoom, ox: state.design.ox, oy: state.design.oy, rot: state.design.rot, custom: state.design.custom };
+  const prevDrinks = state.drinks, prevRim = state.rim, prevColor = state.color;
+  const s = idx % SAMPLES.length;
+  Object.assign(state.design, { img: sampleCanvases[s], fit: 'cover', zoom: 1, ox: 0, oy: 0, rot: 0 });
+  state.drinks = true; state.rim = ['', 'Sarah & Dan · 06.20.27', 'HOPYARD.COM', 'PINE HILL INVITATIONAL'][s]; state.color = s === 2 ? CONFIG.colors[1].hex : CONFIG.colors[0].hex;
+  renderScene(target.getContext('2d'), heroScenes[idx % heroScenes.length][0], 1);
+  $('#heroLabel').textContent = heroScenes[idx % heroScenes.length][1] + ' · ' + SAMPLES[s].name.toLowerCase();
+  Object.assign(state.design, prev); state.drinks = prevDrinks; state.rim = prevRim; state.color = prevColor;
+}
+function heroNext(){
+  heroIdx++; const back = heroFront === heroA ? heroB : heroA;
+  heroRender(back, heroIdx); back.style.opacity = 1; heroFront.style.opacity = 0; heroFront = back;
+}
+
+// packs
+const packsEl = $('#packs');
+function renderPacks(){
+  packsEl.innerHTML = '';
+  for (const p of CONFIG.packs){
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'pack'; b.setAttribute('aria-pressed', p.id === state.pack);
+    b.innerHTML = `${p.tag ? `<span class="tag">${p.tag}</span>` : ''}<div class="q">${p.label}</div><div class="p">${money(p.price)}</div><div class="e">${p.qty > 1 ? money(+(p.price / p.qty).toFixed(2)) + ' each' : 'Try one'}</div>`;
+    b.onclick = () => { state.pack = p.id; renderPacks(); track('pack_select', { pack: p.id }); };
+    packsEl.appendChild(b);
+  }
+  const p = CONFIG.packs.find(x => x.id === state.pack);
+  $('#poSumLabel').textContent = `${p.label}, ${p.qty} CoasTee${p.qty > 1 ? 's' : ''}`; $('#poSumPrice').textContent = money(p.price);
+}
+
+// estimator (log scale 50..5000)
+const qMin = 50, qMax = 5000;
+function qFromSlider(v){ const q = qMin * Math.pow(qMax / qMin, v / 100); const step = q < 200 ? 10 : q < 1000 ? 50 : 100; return Math.round(q / step) * step; }
+function updateEstimate(){
+  const q = qFromSlider(+$('#estRange').value);
+  const tier = CONFIG.tiers.filter(t => q >= t.min).pop() || CONFIG.tiers[0];
+  $('#estQ').textContent = q.toLocaleString('en-US'); $('#estUnit').textContent = money(tier.unit); $('#estTotal').textContent = money(Math.round(q * tier.unit));
+  $('#tiers').innerHTML = CONFIG.tiers.map(t => `<span class="${t === tier ? 'on' : ''}">${t.min.toLocaleString('en-US')}+ · ${money(t.unit)}</span>`).join('');
+  const sel = $('#bizQty'); sel.selectedIndex = q < 250 ? 0 : q < 500 ? 1 : q < 1000 ? 2 : q < 2500 ? 3 : 4;
+}
+$('#estRange').oninput = updateEstimate;
+
+// forms
+function designSummary(){
+  const d = state.design, c = CONFIG.colors.find(x => x.hex === state.color);
+  return `${d.custom ? 'Custom image' : 'Sample: ' + d.name} · layout ${d.fit} · color ${c ? c.name : state.color}${state.rim ? ' · rim text "' + state.rim + '"' : ''}`;
+}
+function designPreview(){ const c = mk(480, 320); renderScene(c.getContext('2d'), 'lawn', 480 / W); return c.toDataURL('image/jpeg', 0.75); }
+async function submit(kind, form, extra){
+  const fd = Object.fromEntries(new FormData(form).entries());
+  const payload = Object.assign({ type: kind, submittedAt: new Date().toISOString(), page: location.href.split('#')[0] }, fd, extra);
+  if (CONFIG.formEndpoint){
+    const res = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error('send failed');
+  } else {
+    const subject = kind === 'preorder' ? `CoasTee pre-order: ${fd.name}` : `CoasTee business quote: ${fd.company}`;
+    const body = Object.entries(payload).filter(([k]) => k !== 'designPreview').map(([k, v]) => `${k}: ${v}`).join('\n');
+    location.href = `mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+}
+function validate(form){
+  let ok = true;
+  form.querySelectorAll('[required]').forEach(f => { const bad = !f.value.trim() || (f.type === 'email' && !/^\S+@\S+\.\S+$/.test(f.value)); f.style.borderColor = bad ? '#E5372A' : ''; if (bad && ok){ f.focus(); ok = false; } });
+  return ok;
+}
+$('#poForm').addEventListener('submit', async e => {
+  e.preventDefault(); const f = e.target; if (!validate(f)) return;
+  const p = CONFIG.packs.find(x => x.id === state.pack), custom = $('#poCustom').checked;
+  const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    await submit('preorder', f, { pack: p.label, quantity: p.qty, price: p.price, design: custom ? designSummary() : 'Plain (no custom print)', designPreview: custom ? designPreview() : '' });
+    f.classList.add('sent'); track('preorder_complete', { pack: p.id, value: p.price });
+    if (CONFIG.checkoutUrl){ $('#poPay').href = CONFIG.checkoutUrl; $('#poPayWrap').hidden = false; }
+  } catch(err){ toast('Something went wrong. Please try again or email us.'); }
+  btn.disabled = false; btn.textContent = 'Reserve my CoasTee';
+});
+$('#bizForm').addEventListener('submit', async e => {
+  e.preventDefault(); const f = e.target; if (!validate(f)) return;
+  const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Sending…';
+  const attach = $('#bizAttach').checked;
+  try {
+    await submit('business', f, { estimateUnits: $('#estQ').textContent, design: attach ? designSummary() : 'Not attached', designPreview: attach ? designPreview() : '' });
+    f.classList.add('sent'); track('business_lead', { qty: f.qty.value, useCase: f.useCase.value });
+  } catch(err){ toast('Something went wrong. Please try again or email us.'); }
+  btn.disabled = false; btn.textContent = 'Request my quote →';
+});
+$('#quoteThis').addEventListener('click', () => { $('#bizAttach').checked = true; });
+
+// contact + config text
+for (const id of ['bizMail', 'ftMail']){ const a = $('#' + id); a.textContent = CONFIG.contactEmail; a.href = 'mailto:' + CONFIG.contactEmail; }
+for (const id of ['bizTel', 'ftTel']){ const a = $('#' + id); a.textContent = CONFIG.contactPhone; a.href = 'tel:' + CONFIG.contactPhone.replace(/[^\d+]/g, ''); }
+$('#ftLi').href = CONFIG.linkedin;
+$('#faqShip').textContent = CONFIG.shipEstimate;
+$('#faqMoq').textContent = `Branded orders start at ${CONFIG.businessMOQ} units. Use the estimator above for an instant ballpark, and we'll send an exact quote with a free digital proof.`;
+if (CONFIG.checkoutUrl) $('#perkPay').textContent = 'Secure checkout after you reserve';
+
+document.querySelectorAll('[data-track]').forEach(el => el.addEventListener('click', () => track('cta_click', { id: el.dataset.track })));
+addEventListener('scroll', () => $('#nav').classList.toggle('scrolled', scrollY > 10), { passive: true });
+
+/* boot */
+(async function boot(){
+  try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]); } catch(e){}
+  buildSamples();
+  useImage(sampleCanvases[0], SAMPLES[0].name, false, 'cover');
+  renderPacks(); updateEstimate();
+  heroRender(heroA, 0);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) setInterval(() => { if (!document.hidden) heroNext(); }, 3800);
+  // warm remaining caches during idle time
+  const idle = window.requestIdleCallback || (f => setTimeout(f, 200));
+  SCENE_ORDER.forEach((id, i) => idle(() => sceneLayers(id)));
+})();
+</script>
+</body>
+</html>
